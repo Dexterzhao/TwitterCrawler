@@ -45,9 +45,12 @@ import twitter4j.util.TimeSpanConverter;
  */
 public class App 
 {
-    public static void main( String[] args ) throws TwitterException
+    public static int FileNumber = 0;
+
+	public static void main( String[] args ) throws TwitterException
     {
     	ConfigurationBuilder confBuilder = new twitter4j.conf.ConfigurationBuilder();
+    	FileNumber=Integer.valueOf(args[0]).intValue();
     	
     	confBuilder.setDebugEnabled(true)
     		.setOAuthConsumerKey("1oZKJhXaEV6XKOrgeRk3jkGVj")
@@ -87,9 +90,12 @@ public class App
     	    public static class TweetListener implements StatusListener {
     	    	TweetProcessor processor = new TweetProcessor();
     	    	
+    	    	
+    	   
     	    	public void onStatus(Status status) {
     	    	try {
 					processor.processTweet(status);
+				 	
 				} catch (JsonGenerationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -129,6 +135,8 @@ public class App
     		public static class TweetProcessor {
     			
     			
+    			
+    			
     			public static int i=0;
     			
     			public class UserInformation {
@@ -163,13 +171,14 @@ public class App
         			
     			}
     			
+    			
     			public void processTweet(Status status) throws JsonGenerationException, JsonMappingException, IOException {
     				
     		    	
     			
     				Status st=status;
-    		    	
-    		        
+    				
+ 
     		        UserInformation user=new UserInformation();
     		        user._User=st.getUser().getName();
     		        user._timestamp=formatDate(st.getCreatedAt());
@@ -199,6 +208,9 @@ public class App
     		        if(FileCounter(file)>10485760){		//10485760
     		        	i++;
     		        }
+    		        if(i>=FileNumber){
+	    	    		System.exit(0);
+	    	    	}
     		        
 
     		        // if file doesnt exists, then create it
@@ -233,7 +245,7 @@ public class App
     				TimeSpanConverter converter = new TimeSpanConverter(); 
     				return converter.toTimeSpanString(create_date);
 
-    				}
+    			}
     			
     			public long FileCounter(File f) {  
     			    
@@ -242,11 +254,7 @@ public class App
     			    }else{  
     			        return 0;
     			    }  
-    			}
-    		
-    	
-    		
-  
+    			}   	   		
 	
     		}
 }  
